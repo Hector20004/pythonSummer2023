@@ -6,7 +6,7 @@ def init():
     connection = pyodbc.connect(connection_string)
     return connection
 
-def create_account(cursor):
+def createAccount(cursor):
     while True:
         username = input('Enter username or press b to go back\n')
         if username == 'b':
@@ -27,11 +27,17 @@ def login(cursor):
         username = input('Enter your username or press b to go back\n')
         if username == 'b':
             return
-        user = cursor.execute("select user_name,user_password from user_info where user_name = ?",username).fetchall()
-        password = input('Enter your password\n')
-        if user is None:
-            print('Invalid username')
-        else:
-            print(user)
-            break
+        user = cursor.execute("select user_name,user_password from user_info where user_name = ?",username).fetchone()
+        if user is not None:
+            password = input('Enter your password\n')
+            while password != user[1]:
+                print('wrong password try again or press b to go back')
+                password = input()
+                if password == 'b':
+                    return
+            return user
 
+def afterLoginMenu(cursor,usuario):
+    unreaded_messages = cursor.execute('select count(*) from receive_message where receiver = ? and readed = 0 ;',usuario).fetchone()[0]
+    print('Welcome ',usuario,'you have',unreaded_messages,'new messages')
+    option = input('To check your messages press 1\nTo send a message press 2\n to go to main menu press3\nTo exit press q')
