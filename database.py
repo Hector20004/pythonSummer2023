@@ -37,7 +37,34 @@ def login(cursor):
                     return
             return user
 
+def getLinesOfText():
+    text_list = []
+    while True:
+        line = input()
+        if line:
+            text_list.append(line)
+        else:
+            break
+    return text_list
+def sendMessage(cursor):
+    print('Write the persons you which to write, press enter two times to finish')
+    recipients = getLinesOfText()
+    subject = input('Enter email subject:\n')
+    print('write email, press enter two times to send')
+    text = getLinesOfText()
+    text.insert(0,subject)
+    email = '\n'.join(text)
+    #cursor.execute('Insert into sended_messages(')
+
+
 def afterLoginMenu(cursor,usuario):
     unreaded_messages = cursor.execute('select count(*) from receive_message where receiver = ? and readed = 0 ;',usuario).fetchone()[0]
     print('Welcome ',usuario,'you have',unreaded_messages,'new messages')
-    option = input('To check your messages press 1\nTo send a message press 2\n to go to main menu press3\nTo exit press q')
+    option = input('To check your messages press 1\nTo send a message press 2\nTo go to main menu press b\nTo exit press q\n')
+
+    if option == 'q':
+        exit()
+    if option == 'b':
+        return
+    if option == '2':
+        sendMessage(cursor)
