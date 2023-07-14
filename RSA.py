@@ -32,18 +32,14 @@ def generateKeys():
     q = random.choice(primes)
     while p == q:
         q = random.choice(primes)
-    p = 61
-    q = 53
     n = p*q
     phi = (p-1)*(q-1)
     e = 2
     while gcd(e,phi) != 1:
         e += 1
-    e = 17
-    d = modular_inverse(lcm(p-1,q-1),e)
-    print(d)
-    d = d[0]
-    print(e,n,d)
+    d = modular_inverse(lcm(p-1,q-1),e)[1]
+    while d<0:
+        d += lcm(p-1,q-1)
     private_key = d
     module = n
     public_key = e
@@ -51,22 +47,36 @@ def generateKeys():
 
 def encryptCharacter(ch):
     ch = ord(ch)
-    global public_key,module
+    global public_key, module
     encrypted_character = 1
-    while public_key>0:
+    i = public_key
+    while i>0:
         encrypted_character *= ch
         encrypted_character %= module
-        public_key -= 1
+        i -= 1
     return encrypted_character
 def decryptCharacter(encrypted_character):
     global private_key,module
     decrypted_character = 1
-    while private_key>0:
+    i = private_key
+    while i>0:
         decrypted_character *= encrypted_character
         decrypted_character %= module
-        private_key -= 1
+        i -= 1
     return chr(decrypted_character)
-generateKeys()
-a =encryptCharacter('A')
-a = decryptCharacter(a)
-print(a)
+
+def encodedMessage(message):
+    encoded = []
+    for character in message:
+        encoded.append(str(encryptCharacter(character)))
+    return ','.join(encoded)
+
+def decryptMessage(encoded):
+    message = ''
+    encoded = encoded.split(',')
+    print(encoded)
+    for i in encoded:
+        message += decryptCharacter(int(i))
+    return message
+
+
