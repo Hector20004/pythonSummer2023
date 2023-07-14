@@ -27,7 +27,6 @@ def lcm(a,b):
 
 
 def generateKeys():
-    global public_key,private_key,module
     p = random.choice(primes)
     q = random.choice(primes)
     while p == q:
@@ -40,14 +39,11 @@ def generateKeys():
     d = modular_inverse(lcm(p-1,q-1),e)[1]
     while d<0:
         d += lcm(p-1,q-1)
-    private_key = d
-    module = n
-    public_key = e
+    return e,n,d
 
 
-def encryptCharacter(ch):
+def encryptCharacter(ch,public_key,module):
     ch = ord(ch)
-    global public_key, module
     encrypted_character = 1
     i = public_key
     while i>0:
@@ -55,8 +51,7 @@ def encryptCharacter(ch):
         encrypted_character %= module
         i -= 1
     return encrypted_character
-def decryptCharacter(encrypted_character):
-    global private_key,module
+def decryptCharacter(encrypted_character,private_key,module):
     decrypted_character = 1
     i = private_key
     while i>0:
@@ -65,18 +60,18 @@ def decryptCharacter(encrypted_character):
         i -= 1
     return chr(decrypted_character)
 
-def encodedMessage(message):
+def encodeMessage(message,public_key,module):
     encoded = []
     for character in message:
-        encoded.append(str(encryptCharacter(character)))
+        encoded.append(str(encryptCharacter(character,public_key,module)))
     return ','.join(encoded)
 
-def decryptMessage(encoded):
+def decryptMessage(encoded,private_key,module):
     message = ''
     encoded = encoded.split(',')
     print(encoded)
     for i in encoded:
-        message += decryptCharacter(int(i))
+        message += decryptCharacter(int(i),private_key,module)
     return message
 
 

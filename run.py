@@ -2,7 +2,6 @@ import database
 import database as DB
 
 connection = DB.init()
-cursor = connection.cursor()
 print('Welcome to Cmail')
 
 while True:
@@ -10,11 +9,11 @@ while True:
     if command == 'q':
         break
     if command == '2':
-        DB.createAccount(cursor)
+        DB.createAccount(connection)
     if command == '1':
-        user = database.login(cursor)
+        user = database.login(connection)
         if user is not None:
-            DB.afterLoginMenu(cursor,user[0])
+            DB.afterLoginMenu(connection,user[0])
 
 
 connection.commit()
