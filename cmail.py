@@ -68,8 +68,9 @@ def check_Messages(connection,user):
         if emails[i][6] == 0:
             font_style = '\033[91m'
         subject = emails[i][1].split('\n')[0]
-        print(font_style,i+1,"- From", emails[i][2], subject, "on",emails[i][5],'\n','\033[0m')
+        print(font_style,i+1,"- From", emails[i][2], subject, "on",emails[i][5],'\033[0m')
         i += 1
+    print('\n')
     option = int(input('Input email number to read it or press 0 to go back\n'))
 
     if option == 0:
@@ -79,4 +80,4 @@ def check_Messages(connection,user):
         cursor.execute("""Update receive_message
                           Set readed = 1
                           where received_id = ?
-                        """,emails[option-1][7])
+                        """,emails[option-1][8])

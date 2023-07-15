@@ -69,7 +69,6 @@ def encodeMessage(message,public_key,module):
 def decryptMessage(encoded,private_key,module):
     message = ''
     encoded = encoded.split(',')
-    print(encoded)
     for i in encoded:
         message += decryptCharacter(int(i),private_key,module)
     return message
