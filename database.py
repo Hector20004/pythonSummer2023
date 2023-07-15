@@ -44,11 +44,17 @@ def afterLoginMenu(cnxn,usuario):
     cursor = cnxn.cursor()
     unreaded_messages = cursor.execute('select count(*) from receive_message where receiver = ? and readed = 0 ;',usuario).fetchone()[0]
     print('Welcome ',usuario,'you have',unreaded_messages,'new messages')
-    option = input('To check your messages press 1\nTo send a message press 2\nTo go to main menu press b\nTo exit press q\n')
 
-    if option == 'q':
-        exit()
-    if option == 'b':
-        return
-    if option == '2':
-        CM.sendMessage(cnxn,usuario)
+    while True:
+        option = input('To check your messages press 1\nTo send a message press 2\nTo go to main menu press b\nTo exit press q\n')
+
+        if option == 'q':
+            cnxn.commit()
+            cnxn.close()
+            exit()
+        if option == 'b':
+            return
+        if option == '1':
+            CM.check_Messages(cnxn,usuario)
+        if option == '2':
+            CM.sendMessage(cnxn,usuario)
