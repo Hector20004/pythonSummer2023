@@ -71,13 +71,16 @@ def check_Messages(connection,user):
         print(font_style,i+1,"- From", emails[i][2], subject, "on",emails[i][5],'\033[0m')
         i += 1
     print('\n')
-    option = int(input('Input email number to read it or press 0 to go back\n'))
-
-    if option == 0:
-        return
-    else:
-        print(emails[option-1][1],'\n')
-        cursor.execute("""Update receive_message
+    while True:
+        option = int(input('Input email number to read it or press 0 to go back\n'))
+        if option == 0:
+            return
+        else:
+            try:
+                print(emails[option-1][1],'\n')
+                cursor.execute("""Update receive_message
                           Set readed = 1
                           where received_id = ?
                         """,emails[option-1][8])
+            except IndexError:
+                print('No mail number',option,'\n')
